@@ -1,3 +1,4 @@
+// @deno-types="@types/express"
 import { Router } from "express";
 
 namespace UserController {

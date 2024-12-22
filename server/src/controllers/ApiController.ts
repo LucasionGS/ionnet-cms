@@ -1,3 +1,4 @@
+// @deno-types="@types/express"
 import { Router } from "express";
 import User from "../../../shared/User.ts";
 import UserController from "./UserController.ts";

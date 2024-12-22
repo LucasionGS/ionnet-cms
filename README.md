@@ -1,19 +1,36 @@
-# Vite + Deno + React + TypeScript
+# Ionnet CMS
 
 ## Running
 
-You need to have Deno v2.0.0 or later installed to run this repo.
+You need to have Deno v2.1.0 or later installed to run this repo.
+
+You will need a `.env` file in the root with the following variables:
+
+```env
+MYSQL_DATABASE="icms"
+MYSQL_USERNAME="username"
+MYSQL_PASSWORD="password"
+```
+
+After the database is created, run the migrations:
+```bash
+deno task server --migration-up
+```
 
 Start a dev server:
-
-```
-$ deno task dev
+```bash
+deno task server
 ```
 
 ## Deploy
 
-Build production assets:
+Build for production:
 
-```
-$ deno task build
+```bash
+deno task build
+deno task compile
+# If you need to run migrations:
+./ionnetcms --migration-up
+# Run the server
+./ionnetcms
 ```

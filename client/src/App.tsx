@@ -1,27 +1,48 @@
 import "./App.scss"
-import React, { useState } from "react"
-// @ts-expect-error
+import React, { useState } from "react";
+// @ts-expect-error No import type
 import reactLogo from "./assets/react.svg"
 import { AppShell, Button, Input, Stack, Table, TextInput } from "@mantine/core";
 import { useEffect } from "react";
-import User from "../../shared/User";
+import User from "../../shared/User.ts";
 import { useTransition } from "react";
 
 function App() {
   const { user } = useUser();
   const [search, setSearch] = useState("");
   const [isPending, startTransition] = useTransition();
-  const [tableItems, setTableItems] = useState<string[]>([]);
+  const [initialTableItems, setInitialTableItems] = useState<{
+    id: number,
+    name: string,
+    parentId: number,
+    fields: string,
+    createdAt: string,
+    updatedAt: string
+  }[]>([]);
+  const [tableItems, setTableItems] = useState<{
+    id: number,
+    name: string,
+    parentId: number,
+    fields: string,
+    createdAt: string,
+    updatedAt: string
+  }[]>([]);
 
+  useEffect(() => {
+    fetch("/api/nodes").then(response => response.json()).then(nodes => {
+      setInitialTableItems(nodes);
+      setTableItems(nodes);
+    });
+  }, []);
+  
   useEffect(() => {
     startTransition(() => {
       setTableItems(
-        Array.from({ length: 1000 }, (_, index) => index)
-        .map(index => `Blog post ${index + 1}`)
-        .filter(index => index.toString().includes(search))
+        initialTableItems
+        .filter(node => node.name.toLowerCase().includes(search.toLowerCase()))
       );
     });
-  }, [search]);
+  }, [search, initialTableItems]);
   
   return (
     <AppShell
@@ -101,9 +122,9 @@ function App() {
                   </Table.Tr>
                 }
 
-                {tableItems.map((title, index) => (
+                {tableItems.map((node, index) => (
                   <Table.Tr>
-                  <Table.Td>{title}</Table.Td>
+                  <Table.Td>{node.name}</Table.Td>
                   <Table.Td>Article</Table.Td>
                   <Table.Td>John Doe</Table.Td>
                   <Table.Td>2021-12-01</Table.Td>
